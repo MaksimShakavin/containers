@@ -4,32 +4,28 @@ Guidance for AI coding agents (and humans) writing Go in this repository.
 Unlike the fleet's other Go repos, there's no application code here: Go
 exists solely to test the container images this repo builds, via
 `testcontainers-go`. The fleet's general Go-conventions template (idiomatic
-Go, `log/slog`, `caarlos0/env`, `pflag`, mise build/lint/test tasks,
+Go, `log/slog`, `caarlos0/env`, `pflag`, Taskfile build/lint/test tasks,
 ...) doesn't apply here: there's no `main.go`, no config to load, no CLI, no
 server. This repo is the one exception in the fleet that doesn't reuse that
 template; everything below is specific to this repo's own shape.
 
-## Working in this repo: AI usage, commits, and safety
+Local dev tooling is provisioned by [mise](https://mise.jdx.dev):
+`.mise/config.toml` is the single source of truth for both local dev and CI
+(`jdx/mise-action`). Run `direnv allow` (the repo's `.envrc` is `use mise`)
+or `mise install` to get `go`, `hadolint`, etc. on PATH. Tasks are run with
+`mise run` / `mise tasks` (see "Running" below).
 
-This repo doesn't carry its own `CONTRIBUTING.md`; GitHub serves the
-org-wide one from [`home-operations/.github`](https://github.com/home-operations/.github/blob/main/CONTRIBUTING.md),
-which includes an AI Usage Policy that applies to any AI coding agent here:
-assistive use only, a human must author the majority of any change, AI use
-must be disclosed, a human reviews every line before submission, and the
-contributor must be able to explain any line a reviewer asks about. AI must
-never write the PR description, an issue, or a reply to a human on the
-contributor's behalf. Read the policy itself rather than trusting this
-summary; it can change without this file being updated to match. This
-matters especially here: it would be easy to let AI bulk-generate a dozen
-near-identical `container_test.go` files unattended, which is exactly the
-"predominantly AI-generated" pattern the policy prohibits.
+## Working in this repo: commits and safety
 
-- PR titles follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/):
-  `<type>[(scope)][!]: <description>`. Individual commit messages don't have
-  to follow the format, though matching it is fine. Sign off commits:
-  `git commit -s`.
-- Never `git commit`, `git push`, or open a PR unless asked to. Ask before
-  any destructive or hard-to-reverse action instead of defaulting to it.
+This is a personal repo — no formal AI usage policy. Agents can do the bulk
+of the work here; the guidance below is just about keeping the result correct
+and the history clean.
+
+- Commit messages loosely follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+  (`<type>(scope): <description>`, e.g. `release(emonoda): ...`); match the
+  existing style but it's not enforced. Sign off commits: `git commit -s`.
+- Commit when the work is done and verified; don't push unless asked. Ask
+  before any destructive or hard-to-reverse action instead of defaulting to it.
 - Don't state a library's API from memory: verify against `pkg.go.dev` or
   this project's own code, e.g. `tests/helpers.go`, before assuming a
   `testcontainers-go` helper exists or behaves a certain way.
@@ -57,7 +53,7 @@ that's the DRY boundary in this repo.
   a container past the test.
 - `TEST_IMAGE` overrides the default image under test
   (`helpers.GetTestImage`), so a local build task can point tests at a
-  just-built image instead of the published tag; check `mise tasks` for the
+  just-built image instead of the published tag; run `mise tasks` for the
   actual task name.
 - Idempotent and side-effect-free: a test only asserts against the image
   under test (command exit code, HTTP response, file presence in the
@@ -72,7 +68,8 @@ that's the DRY boundary in this repo.
 
 ## Running
 
-Run `mise tasks` for the actual local build+test task name and invocation;
-don't assume it matches another repo's, and don't assume CI selects which
-apps to build from `.github/labeler.yaml`, that file drives PR labels only.
-Check `.github/workflows/` for the step that actually selects changed apps.
+Run `mise tasks` for the actual local build+test task name and invocation
+(e.g. `mise run local-build <app>`); don't assume it matches another repo's,
+and don't assume CI selects which apps to build from `.github/labeler.yaml`,
+that file drives PR labels only. Check `.github/workflows/` for the step that
+actually selects changed apps.

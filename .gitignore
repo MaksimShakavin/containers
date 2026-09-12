@@ -1,4 +1,5 @@
 .cache
 .claude
+.direnv
 .private
 docker-bake.json

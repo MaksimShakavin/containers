@@ -1,6 +1,9 @@
 [settings]
 experimental = true
 
+[env]
+NPM_CONFIG_REGISTRY = "https://registry.npmjs.org/"
+
 [tools]
 actionlint = "1.7.12"
 gh = "2.100.0"
