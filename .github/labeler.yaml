@@ -21,3 +21,7 @@ app/emonoda:
   - changed-files:
       - any-glob-to-any-file:
           - apps/emonoda/**
+app/qbit-torrent-files-cleaner:
+  - changed-files:
+      - any-glob-to-any-file:
+          - apps/qbit-torrent-files-cleaner/**
