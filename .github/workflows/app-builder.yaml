@@ -65,7 +65,7 @@ jobs:
         with:
           flavor: latest=false
           images: |
-            ghcr.io/${{ github.repository_owner }}/${{ inputs.app }}
+            ghcr.io/maksimshakavin/${{ inputs.app }}
           tags: |
             type=semver,pattern={{version}},value=${{ steps.app-versions.outputs.semantic }},enable=${{ steps.app-versions.outputs.is-valid-semver && inputs.release }}
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.app-versions.outputs.semantic }},enable=${{ steps.app-versions.outputs.is-valid-semver && inputs.release }}
@@ -141,17 +141,17 @@ jobs:
             ./docker-bake.hcl
             cwd://${{ runner.temp }}/docker-metadata-action-bake.json
           set: |
-            *.args.VENDOR=${{ github.repository_owner }}
-            *.cache-from=${{ format('type=registry,ref=ghcr.io/{0}/build_cache:{1}-{2},mode=max', github.repository_owner, inputs.app, steps.target.outputs.arch) }}
-            *.cache-to=${{ inputs.release && format('type=registry,ref=ghcr.io/{0}/build_cache:{1}-{2},mode=max,compression=zstd,force-compression=true', github.repository_owner, inputs.app, steps.target.outputs.arch) || '' }}
+            *.args.VENDOR=maksimshakavin
+            *.cache-from=${{ format('type=registry,ref=ghcr.io/{0}/build_cache:{1}-{2},mode=max', 'maksimshakavin', inputs.app, steps.target.outputs.arch) }}
+            *.cache-to=${{ inputs.release && format('type=registry,ref=ghcr.io/{0}/build_cache:{1}-{2},mode=max,compression=zstd,force-compression=true', 'maksimshakavin', inputs.app, steps.target.outputs.arch) || '' }}
             *.labels.org.opencontainers.image.title=${{ inputs.app }}
-            *.labels.org.opencontainers.image.url=https://ghcr.io/${{ github.repository_owner }}/${{ inputs.app }}
+            *.labels.org.opencontainers.image.url=https://ghcr.io/maksimshakavin/${{ inputs.app }}
             *.labels.org.opencontainers.image.version=${{ steps.app-options.outputs.version }}
             *.labels.org.opencontainers.image.revision=${{ github.sha }}
-            *.labels.org.opencontainers.image.vendor=${{ github.repository_owner }}
-            *.output=${{ inputs.release && format('type=image,name=ghcr.io/{0}/{1},push-by-digest=true,name-canonical=true,push=true,compression=zstd,force-compression=true', github.repository_owner, inputs.app) || 'type=docker' }}
+            *.labels.org.opencontainers.image.vendor=maksimshakavin
+            *.output=${{ inputs.release && format('type=image,name=ghcr.io/{0}/{1},push-by-digest=true,name-canonical=true,push=true,compression=zstd,force-compression=true', 'maksimshakavin', inputs.app) || 'type=docker' }}
             *.platform=${{ matrix.platform }}
-            *.tags=${{ ! inputs.release && format('ghcr.io/{0}/{1}:sandbox', github.repository_owner, inputs.app) || '' }}
+            *.tags=${{ ! inputs.release && format('ghcr.io/{0}/{1}:sandbox', 'maksimshakavin', inputs.app) || '' }}
           source: ./apps/${{ inputs.app }}
           targets: image
 
@@ -178,7 +178,7 @@ jobs:
         uses: $/.github/actions/app-tests
         with:
           app: ${{ inputs.app }}
-          image: ghcr.io/${{ github.repository_owner }}/${{ inputs.app }}:sandbox
+          image: ghcr.io/maksimshakavin/${{ inputs.app }}:sandbox
 
   merge:
     if: ${{ inputs.release }}
@@ -191,7 +191,7 @@ jobs:
       packages: write
     env:
       APP: ${{ inputs.app }}
-      REPO_OWNER: ${{ github.repository_owner }}
+      REPO_OWNER: maksimshakavin
     outputs:
       digest: ${{ steps.digest.outputs.digest }}
     steps:
@@ -248,7 +248,7 @@ jobs:
       attestations: write
     env:
       APP: ${{ inputs.app }}
-      REPO_OWNER: ${{ github.repository_owner }}
+      REPO_OWNER: maksimshakavin
       DIGEST: ${{ needs.merge.outputs.digest }}
     steps:
       - name: Login to GitHub Container Registry
@@ -262,13 +262,13 @@ jobs:
         uses: anchore/sbom-action@3ad7283483fc7af8ff2b4ea19663c2d5ca935e26 # v0.24.2
         with:
           dependency-snapshot: true
-          image: ghcr.io/${{ github.repository_owner }}/${{ inputs.app }}@${{ needs.merge.outputs.digest }}
+          image: ghcr.io/maksimshakavin/${{ inputs.app }}@${{ needs.merge.outputs.digest }}
 
       - name: Attestation
         uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
         with:
           push-to-registry: true
-          subject-name: ghcr.io/${{ github.repository_owner }}/${{ inputs.app }}
+          subject-name: ghcr.io/maksimshakavin/${{ inputs.app }}
           subject-digest: ${{ needs.merge.outputs.digest }}
 
       - name: Verify Attestation
