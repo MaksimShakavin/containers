@@ -6,7 +6,7 @@ variable "APP" {
 
 variable "VERSION" {
   // renovate: datasource=github-releases depName=MaksimShakavin/qbit-torrent-files-cleaner
-  default = "v0.2.0"
+  default = "v0.3.1"
 }
 
 variable "SOURCE" {
