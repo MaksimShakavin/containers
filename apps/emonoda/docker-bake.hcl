@@ -6,7 +6,7 @@ variable "APP" {
 
 variable "VERSION" {
   // renovate: datasource=git-refs depName=https://github.com/MaksimShakavin/emonoda branch=feature/qbittorrent-preserve-category
-  default = "557c52160b7fbba2d0153ea2b40e4b32c590c2f6"
+  default = "913b2ddba78d8398bf00d23b963796a0713e5c0b"
 }
 
 variable "SOURCE" {
