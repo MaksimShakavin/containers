@@ -1,0 +1,4 @@
+# NOTE: This file is automatically copied to each application's directory
+# during build. This image installs homebox-mcp from PyPI and copies nothing
+# from the build context, so everything here is excluded.
+/*
