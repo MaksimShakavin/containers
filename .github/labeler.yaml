@@ -21,6 +21,10 @@ app/emonoda:
   - changed-files:
       - any-glob-to-any-file:
           - apps/emonoda/**
+app/homebox-mcp:
+  - changed-files:
+      - any-glob-to-any-file:
+          - apps/homebox-mcp/**
 app/qbit-torrent-files-cleaner:
   - changed-files:
       - any-glob-to-any-file:
