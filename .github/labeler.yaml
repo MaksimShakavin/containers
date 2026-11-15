@@ -21,6 +21,10 @@ app/emonoda:
   - changed-files:
       - any-glob-to-any-file:
           - apps/emonoda/**
+app/frappe-lms:
+  - changed-files:
+      - any-glob-to-any-file:
+          - apps/frappe-lms/**
 app/homebox-mcp:
   - changed-files:
       - any-glob-to-any-file:
